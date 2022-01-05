@@ -139,6 +139,8 @@ The object instance that passed to `MSWordExporter.exportTo(pojoObj, outputFileP
 
 Obviously, the dot character shouldn't be there is referObjName is not given.
 
+When use replace variable inside for-loop expression, if no referObjName given, the for-loop expression may change the behavior of replace variable value lookup. Refer 'for loop expression' later in this doc for more details.
+
 ### How it works
 When a replace variable be found in template, like ${name}, it will try to find **public** and **no arguments** method which name is `getName()` from the root object. 
 
@@ -171,7 +173,7 @@ The for-loop-start-expression define a new object refer name which can be used i
 ${{for car of _.cars}}
 	The car model is: ${car.model}, here it safe
 ${{end}}
-After the for-loop expression, ${car.model} is invalid. This line will cause a runtime exception be raised, error like 'no object defined with given name: car'
+After the for-loop expression, ${car.model} is invalid. This line will cause a runtime exception with error like 'no object defined with given name: car'
 ```
 
 Nesting for-loop is supported. You can do like this:
@@ -192,3 +194,16 @@ ${{for car of _.cars}}
 	${{end}}
 ${{end}}
 ```
+
+New defined objet refer name have higher priority when do replace variable replacement. 
+Example like below:
+```
+Assume root object has getName() public method, we can use ${name} here. 
+It will invoke getName() on the root object and use the return value to replace the variable.
+${{for name of _.childNames}}
+	Varaible ${name} here is differnt. It actually use the Objects.toString() on the new defined name object. 
+	It first invoke getChildNames() on root object, then go through all items in the returned Iterable instance. For each item it invoke the Objects.toString() to get a string value and replace ${name}
+	To access root object name here, must include root refer name underscore in the variable: ${_.name}, this will invoke getName() on root object.
+${{end}}
+```
+
