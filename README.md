@@ -3,9 +3,11 @@ Use Apache POI to generator Microsoft Word based on given template and java POJO
 Since the Word document is very complex for me, this project only provide very simple and very limited function. 
 
 
-# All below example can be found from `src/test` folder
 
-# Simple Example
+# Examples
+All below example can be found from `src/test` folder
+
+## Simple Example
 First create your Microsoft Word template, must be a docx file, like below.
 ![image](https://user-images.githubusercontent.com/19635360/148183208-e8d727cf-b716-4633-8e5c-6e43f147ed79.png)
 
@@ -44,7 +46,7 @@ Finally, the generated doc like below:
 
 
   
-# Complex example
+## Complex example
 In this example, we have a table which need repeat based on the data provided, also text and cell has some simple styles. Additionally the doc template contains header and footer. Like below:
 ![image](https://user-images.githubusercontent.com/19635360/148193169-bfddb66e-2437-4333-bb58-7e611af714e5.png)
 
@@ -103,12 +105,13 @@ Finally, the generated doc like below:
 
 
 # Technical Description
-In MS Word template, only two type expressions are supported:
+In MS Word template, only two kind of expressions are supported:
 1. Replace variable, like this: ${xxx}
 2. For loop expression, like: ${{for xxx of yyy}}
 
-slash (\) character is the escape character. 
+slash (\\) character is the escape character. 
 Escape character use like:
+
 Assume you have below two line in MS Word template
 ```
 This \${name} will not be replace
@@ -123,7 +126,7 @@ This Bob will be replace
 ### Basic
 A variable in MS Word template is start with '${' and end with '}', inside the braces is the property name in the JAVA POJO object.
 
-The syntax for replace variable is: ${referObjName.propertyName}
+The syntax for replace variable is: `${referObjName.propertyName}`
 
 In regular express, the replace variable must match:
 ```
@@ -145,4 +148,47 @@ If none of the method be found, it will throw exception and stop the document ge
 
 If any of the method be found, it will invoke the method on the given root object to get the return value. Return value `null` will be treat as empty string, for any non-null object, `Objects.toString(obj)` will be used to get a string and replace the replace variable in the template. 
 
+## For loop expression
+For loop expression is used to loop through an java Iterable. A for-loop-expression must be a pair of start and end expression.
 
+The syntax for for-loop-start-expression is like (double brances compare to replace variable): `${{for newRefObjName of referObjName.propertyName}}`
+
+The syntax for for-loop-end-expression is hardcoded to: `${{end}}`
+
+In regular express, the for-loop-start-expression must match:
+```
+\$\{\{\s*for\s+([a-zA-Z][a-zA-Z0-9_]*)\s+of\s+([a-zA-Z_][a-zA-Z0-9_]*\.)?([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}
+```
+
+for-loop-start-expression and for-loop-end-expression must be it own paragraph (a new line) in the MS Word template.  The paragraph which contain for-loop-start-expression or for-loop-end-expression will be delete when do document generation.
+
+Dependent on the items count of the returned Iterable object,  the content between for-loop-start-expression and for-loop-end-expression will be repeated. 
+
+for-loop-start-expression and for-loop-end-expression are ok to use in table. When use for-loop expression in table, The entire row that contain for-loop-start-expression and for-loop-end-expression will be delete, only the row between start and end will be repeated.
+
+The for-loop-start-expression define a new object refer name which can be used inside this loop.
+```
+${{for car of _.cars}}
+	The car model is: ${car.model}, here it safe
+${{end}}
+After the for-loop expression, ${car.model} is invalid. This line will cause a runtime exception be raised, error like 'no object defined with given name: car'
+```
+
+Nesting for-loop is supported. You can do like this:
+```
+${{for car of _.cars}}
+	The car model is: ${car.model}
+	Below is the parts of this car:
+	${{for part of car.parts}}
+		PartId: ${part.id}
+		PartName: ${part.name}
+		Part Composition:
+		${{for composition of part.compositions}}
+			${composition}, here will invoke Objects.toString() on composition object
+			Here the root object property can be access use underscore as refer object name, like ${_.name} means the name property of root object
+			Of course upper level refer object name still valid here, like you can use ${car.price} here where 'car' is defined in the most outter
+			level for-loop
+		${{end}}
+	${{end}}
+${{end}}
+```
