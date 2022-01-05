@@ -1,4 +1,4 @@
-package puhao.simple.msword.generator.example.cars.pojo;
+package puhao.simple.msword.generator.example.cars;
 
 import java.util.List;
 

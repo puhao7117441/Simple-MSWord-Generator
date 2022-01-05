@@ -16,6 +16,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * Once the instance be created and template have no change, this instance can be reuse.
+ * This class is NOT thread-safe, don't use it multi-threads env.
+ */
 public class MSWordExporter<T> {
     public static final DateTimeFormatter DOC_CREATION_TIME_FORMATTER = DateTimeFormatter.ofPattern("uuuu年MM月dd日 HH:mm:ss");
     private static final Logger logger = LoggerFactory.getLogger("MSWordExporter");

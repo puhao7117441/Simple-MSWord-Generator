@@ -1,9 +1,9 @@
-package puhao.simple.msword.generator.example.cars;
+package puhao.simple.msword.generator.example;
 
 
 import puhao.simple.msword.generator.MSWordExporter;
-import puhao.simple.msword.generator.example.cars.pojo.Car;
-import puhao.simple.msword.generator.example.cars.pojo.Person;
+import puhao.simple.msword.generator.example.cars.Car;
+import puhao.simple.msword.generator.example.cars.Person;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Example1 {

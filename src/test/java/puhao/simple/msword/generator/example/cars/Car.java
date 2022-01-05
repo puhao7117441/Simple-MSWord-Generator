@@ -1,4 +1,4 @@
-package puhao.simple.msword.generator.example.cars.pojo;
+package puhao.simple.msword.generator.example.cars;
 
 import java.time.LocalDate;
 
@@ -25,15 +25,10 @@ public class Car {
         return price;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
 
     public LocalDate getBoughtAt() {
         return boughtAt;
     }
 
-    public void setBoughtAt(LocalDate boughtAt) {
-        this.boughtAt = boughtAt;
-    }
+
 }
