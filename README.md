@@ -101,3 +101,48 @@ Finally, the generated doc like below:
 ![image](https://user-images.githubusercontent.com/19635360/148194667-6ba4f17c-537f-48ba-9605-e1416a7474af.png)
 
 
+
+# Technical Description
+In MS Word template, only two type expressions are supported:
+1. Replace variable, like this: ${xxx}
+2. For loop expression, like: ${{for xxx of yyy}}
+
+slash (\) character is the escape character. 
+Escape character use like:
+Assume you have below two line in MS Word template
+```
+This \${name} will not be replace
+This ${name} will be replace
+```
+After replacement, it will be like below, the first line will treat ${name} as a normal text since the dollar character be escaped.
+```
+This ${name} will not be replace
+This Bob will be replace
+```
+## Replace variable
+### Basic
+A variable in MS Word template is start with '${' and end with '}', inside the braces is the property name in the JAVA POJO object.
+
+The syntax for replace variable is: ${referObjName.propertyName}
+
+In regular express, the replace variable must match:
+```
+\$\{([a-zA-Z_][a-zA-Z0-9_]*\.)?([a-zA-Z_][a-zA-Z0-9_]*)\}
+```
+
+The referObjName is optional, if referObjName is not present, it means the root object's property. 
+
+The object instance that passed to `MSWordExporter.exportTo(pojoObj, outputFilePath)` is the root object. Underscore character is a reserved key word that refer to the root object. That's means ${name} and ${_.name} are exactly the same.
+
+Obviously, the dot character shouldn't be there is referObjName is not given.
+
+### How it works
+When a replace variable be found in template, like ${name}, it will try to find **public** and **no arguments** method which name is `getName()` from the root object. 
+
+If `getName()` methoed is not found, the program will try to find `isName()` method (still public and no arguments) from the root object. 
+
+If none of the method be found, it will throw exception and stop the document generation. 
+
+If any of the method be found, it will invoke the method on the given root object to get the return value. Return value `null` will be treat as empty string, for any non-null object, `Objects.toString(obj)` will be used to get a string and replace the replace variable in the template. 
+
+
