@@ -3,9 +3,9 @@ Use Apache POI to generator Microsoft Word based on given template and java POJO
 Since the Word document is very complex for me, this project only provide very simple and very limited function. 
 
 Index:
-[Examples](#examples)
-[Technical Description](#technical-description)
-[Limitations](#limitations)
+1. [Examples](#examples)
+2. [Technical Description](#technical-description)
+3. [Limitations](#limitations)
 
 
 # Examples
@@ -213,5 +213,5 @@ ${{end}}
 
 
 # Limitations
-the limitations
+to be update
 
