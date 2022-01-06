@@ -168,6 +168,8 @@ In regular express, the for-loop-start-expression must match:
 
 for-loop-start-expression and for-loop-end-expression must be it own paragraph (a new line) in the MS Word template.  The paragraph which contain for-loop-start-expression or for-loop-end-expression will be delete when do document generation.
 
+for-loop expression does not support in document header and footer.
+
 Dependent on the items count of the returned Iterable object,  the content between for-loop-start-expression and for-loop-end-expression will be repeated. 
 
 for-loop-start-expression and for-loop-end-expression are ok to use in table. When use for-loop expression in table, The entire row that contain for-loop-start-expression and for-loop-end-expression will be delete, only the row between start and end will be repeated.
