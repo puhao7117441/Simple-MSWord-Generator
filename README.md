@@ -215,5 +215,6 @@ ${{end}}
 
 
 # Limitations
-to be update
+The limitation mainly on Word rich content.
+Unknow result if the template Word contain picture/graph/chart/attachment/embeded-objects. Such case never tested.
 
